@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Hollow Objects</title>
+    <link rel="stylesheet" href="index.css">
+    <script src="helper.js" defer></script>
+    <script src="object.js" defer></script>
+    <script src="global.js" defer></script>
+    <script src="index.js" defer></script>
+</head>
+<body>
+    <div class="div-canvas">
+        <canvas id="canvas">
+
+        </canvas>
+    </div>
+    <div class="vertical buttons">
+        <div>
+            Jenis Proyeksi
+        </div>
+        <div class="horizontal">
+            <button id="orthographic-btn">
+                Orthographic
+            </button>
+            <button id="oblique-btn">
+                Oblique
+            </button>
+            <button id="perspective-btn">
+                Perspective
+            </button>
+        </div>
+        <div class="vertical" id="color-tool">
+            <div>
+                Rotation Tool
+            </div>
+            <div class="horizontal">
+                <div>
+                    X
+                </div>
+                <div>
+                    <input type="range" min="0" max="359" value="0" id="x">
+                </div>
+            </div>
+            <div class="horizontal">
+                <div>
+                    Y
+                </div>
+                <div>
+                    <input type="range" min="0" max="359" value="0" id="y">
+                </div>
+            </div>
+            <div class="horizontal">
+                <div>
+                    Z
+                </div>
+                <div>
+                    <input type="range" min="0" max="359" value="0" id="z">
+                </div>
+            </div>
+        </div>
+        <br>
+        <div>
+            Util
+        </div>
+        <div class="vertical">         
+            <div class="horizontal">
+                <input type="text" id="export-filename">
+                <button id="export-btn">
+                    Export
+                </button>
+            </div>
+            <input type="file" value="Pilih File" id="import-file">
+            <button id="import-btn">
+                Import
+            </button>
+            <br>
+            <button id="clear">
+                Clear Canvas
+            </button>
+        </div>
+    </div>
+</body>
+</html>

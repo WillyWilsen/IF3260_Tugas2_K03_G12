@@ -1,6 +1,7 @@
 class Object {
     constructor(vertexes, color, indices) {
         //this variable stores only x, y, z
+        this.current_vertexes = vertexes
         this.vertexes = vertexes
 
         //this variable stores x, y, z
@@ -38,6 +39,12 @@ class Object {
         this.view_matrix = [ 1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1 ];
 
         this.view_matrix[14] = this.view_matrix[14] - 6;
+
+        this.angle = {
+            x: 0,
+            y: 0,
+            z: 0
+        }
     }
 
     set(color, vertexes) {
@@ -114,5 +121,43 @@ class Object {
         gl.uniformMatrix4fv(this._Mmatrix, false, this.mo_matrix);
 
         gl.drawElements(gl.TRIANGLES, this.indices.length, gl.UNSIGNED_SHORT, 0);
+    }
+
+    getPoint(index) {
+        const getIndex = index * 3
+
+        return {
+            x: this.vertexes[getIndex],
+            y: this.vertexes[getIndex + 1],
+            z: this.vertexes[getIndex + 2]
+        }
+    }
+
+    getPoints() {
+        const result = []
+        for(let i = 0; i < this.vertexes.length; i += 3) {
+            result.push({
+                x: this.vertexes[i],
+                y: this.vertexes[i + 1],
+                z: this.vertexes[i + 2]
+            })
+        }
+
+        return result
+    }
+
+    getPointCount() {
+        return this.vertexes.length / 3
+    }
+
+    setPoint(index, newPoint) {
+        const setIndex = index * 3
+        this.vertexes[setIndex] = newPoint.x
+        this.vertexes[setIndex + 1] = newPoint.y
+        this.vertexes[setIndex + 2] = newPoint.z
+    }
+
+    setAngle(angle) {
+        this.angle = angle
     }
 }

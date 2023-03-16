@@ -1,12 +1,12 @@
-class Object {
-    constructor(vertexes, color, indices) {
+class Model {
+    constructor(vertices, colors, faces) {
         //this variable stores only x, y, z
-        this.vertexes = vertexes
+        this.vertices = vertices
 
         //this variable stores x, y, z
-        this.color = color
+        this.colors = colors
 
-        this.indices = indices
+        this.faces = faces
 
         this.vertexShaderCode = 
         `attribute vec3 position;
@@ -40,9 +40,9 @@ class Object {
         this.view_matrix[14] = this.view_matrix[14] - 6;
     }
 
-    set(color, vertexes) {
-        this.color = color
-        this.vertexes = vertexes
+    set(colors, vertices) {
+        this.colors = colors
+        this.vertices = vertices
     }
 
     /**
@@ -82,7 +82,7 @@ class Object {
     draw(gl) {
         const vertexBuffer = gl.createBuffer()
         gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer)
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.vertexes), gl.STATIC_DRAW)
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.vertices), gl.STATIC_DRAW)
 
         const vertexPosition = gl.getAttribLocation(this.program, 'position')
         gl.enableVertexAttribArray(vertexPosition)
@@ -90,7 +90,7 @@ class Object {
 
         const fragmentBuffer = gl.createBuffer()
         gl.bindBuffer(gl.ARRAY_BUFFER, fragmentBuffer)
-        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.color), gl.STATIC_DRAW)
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.colors), gl.STATIC_DRAW)
 
         const colorPosition = gl.getAttribLocation(this.program, 'color')
         gl.enableVertexAttribArray(colorPosition)
@@ -98,7 +98,7 @@ class Object {
 
         const index_buffer = gl.createBuffer();
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, index_buffer);
-        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(this.indices), gl.STATIC_DRAW);
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(this.faces), gl.STATIC_DRAW);
 
         gl.useProgram(this.program)
 
@@ -113,6 +113,6 @@ class Object {
         gl.uniformMatrix4fv(this._Vmatrix, false, this.view_matrix);
         gl.uniformMatrix4fv(this._Mmatrix, false, this.mo_matrix);
 
-        gl.drawElements(gl.TRIANGLES, this.indices.length, gl.UNSIGNED_SHORT, 0);
+        gl.drawElements(gl.TRIANGLES, this.faces.length, gl.UNSIGNED_SHORT, 0);
     }
 }

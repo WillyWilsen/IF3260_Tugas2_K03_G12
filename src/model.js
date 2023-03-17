@@ -37,7 +37,7 @@ class Model {
         this.mo_matrix = [ 1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1 ];
         this.view_matrix = [ 1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1 ];
 
-        this.view_matrix[14] = this.view_matrix[14] - 2;
+        this.view_matrix[14] = this.view_matrix[14] - 5;
 
         this.angle = {
             x: 0,

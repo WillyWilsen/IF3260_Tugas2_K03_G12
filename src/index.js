@@ -17,9 +17,8 @@ function rotateEventListener(rotation, axis) {
    const angle = rotation * Math.PI / 180
    const points = objects[selectedIdx].getPoints()
    const midpoint = calculateMidpoint(points)
-   for(let i = 0; i < points.length; i++) {
-      const resetRotatedPoint = resetRotatePoint(points[i], eval(`objects[selectedIdx].angle.${axis}`), midpoint, axis)
-      const rotatedPoint = rotatePoint(resetRotatedPoint, angle, midpoint, axis)
+   for(let i = 0; i < points.length; ++i) {
+      const rotatedPoint = rotatePoint(points[i], angle - eval(`objects[selectedIdx].angle.${axis}`), midpoint, axis)
       objects[selectedIdx].setPoint(i, rotatedPoint)
    }
    if (axis === 'x') {

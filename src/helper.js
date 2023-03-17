@@ -28,45 +28,6 @@ function get_projection(angle, a, zMin, zMax) {
     ];
 }
 
-function resetRotatePoint(point, angle, anchor, type) {
-    const temp = point
-    const s = Math.sin(angle)
-    const c = Math.cos(angle)
-
-    const newPoint = {
-        x: temp.x - anchor.x,
-        y: temp.y - anchor.y,
-        z: temp.z - anchor.z
-    }
-
-    let rotatedPoint = {}
-    if (type === 'x') {
-        rotatedPoint = {
-            x: newPoint.x,
-            y: newPoint.y * c + newPoint.z * s,
-            z: newPoint.z * c - newPoint.y * s
-        }
-    } else if (type === 'y') {
-        rotatedPoint = {
-            x: newPoint.x * c + newPoint.z * s,
-            y: newPoint.y,
-            z: newPoint.z * c - newPoint.x * s,
-        }
-    } else if (type === 'z') {
-        rotatedPoint = {
-            x: newPoint.x * c + newPoint.y * s,
-            y: newPoint.y * c - newPoint.x * s,
-            z: newPoint.z
-        }
-    }
-
-    rotatedPoint.x += anchor.x
-    rotatedPoint.y += anchor.y
-    rotatedPoint.z += anchor.z
-
-    return rotatedPoint
-}
-
 function rotatePoint(point, angle, anchor, type) {
     const temp = point
     const s = Math.sin(angle)

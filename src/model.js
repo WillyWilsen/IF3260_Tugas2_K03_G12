@@ -37,12 +37,16 @@ class Model {
         this.mo_matrix = [ 1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1 ];
         this.view_matrix = [ 1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1 ];
 
-        this.view_matrix[14] = this.view_matrix[14] - 6;
+        this.view_matrix[14] = this.view_matrix[14] - 2;
 
         this.angle = {
             x: 0,
             y: 0,
             z: 0
+        }
+        this.translation = {
+            x: 0,
+            y: 0
         }
     }
 
@@ -158,5 +162,9 @@ class Model {
 
     setAngle(angle) {
         this.angle = angle
+    }
+
+    setTranslation(translation) {
+        this.translation = translation
     }
 }

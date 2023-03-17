@@ -13,8 +13,7 @@ function app() {
 }
 setTimeout(app)
 
-function rotateEventListener(rotation, axis) {
-   const angle = rotation * Math.PI / 180
+function rotateEventListener(angle, axis) {
    const points = objects[selectedIdx].getPoints()
    const midpoint = calculateMidpoint(points)
    for(let i = 0; i < points.length; ++i) {
@@ -50,6 +49,34 @@ y_angle.addEventListener("input", (e) => {
 })
 z_angle.addEventListener("input", (e) => {
    rotateEventListener(e.target.value, 'z')
+})
+
+
+canvas.addEventListener("mousedown", (e) => {
+   isClicked = true
+})
+canvas.addEventListener("mousemove", (e) => {
+   if (isClicked) {
+      var rect = canvas.getBoundingClientRect()
+      const pos = {
+         x: e.clientX - rect.left,
+         y: e.clientY - rect.top
+      }
+      const convertedPoint = convertPoint(rect, pos)
+      const distance = substractPoint(convertedPoint, objects[selectedIdx].translation)
+      const points = objects[selectedIdx].getPoints()
+      for(let i = 0; i < points.length; ++i) {
+         const movedPoint = movePoint(points[i], distance)
+         objects[selectedIdx].setPoint(i, movedPoint)
+      }
+      objects[selectedIdx].setTranslation(convertedPoint)
+   }
+})
+canvas.addEventListener("mouseup", (e) => {
+   isClicked = false
+})
+canvas.addEventListener("mouseout", (e) => {
+   isClicked = false
 })
 
 

@@ -29,6 +29,7 @@ function get_projection(angle, a, zMin, zMax) {
 }
 
 function rotatePoint(point, angle, anchor, type) {
+    angle = angle * Math.PI / 180
     const temp = point
     const s = Math.sin(angle)
     const c = Math.cos(angle)
@@ -65,4 +66,48 @@ function rotatePoint(point, angle, anchor, type) {
     rotatedPoint.z += anchor.z
 
     return rotatedPoint
+}
+
+function convertPoint(rect, point) {
+    if(!point.hasOwnProperty("x")) {
+        throw new Error("Point passed lacks the key for x")
+    }
+    if(!point.hasOwnProperty("y")) {
+        throw new Error("Point passed lacks the key for y")
+    }
+    const result = {
+        x: 0,
+        y: 0
+    }
+
+    result.x = point.x - (rect.width / 2)
+    result.y = point.y - (rect.height / 2)
+
+    result.x = result.x / (rect.width / 2)
+    result.y = result.y / (rect.height / 2)
+    result.y = (-1) * result.y
+
+    return result
+}
+
+function substractPoint(point, pos) {
+    const newPoint = {
+        x: point.x - pos.x,
+        y: point.y - pos.y
+    }
+
+    console.log(newPoint)
+    return newPoint
+}
+
+function movePoint(point, pos) {
+    const temp = point
+
+    const newPoint = {
+        x: temp.x + pos.x,
+        y: temp.y + pos.y,
+        z: temp.z
+    }
+
+    return newPoint
 }

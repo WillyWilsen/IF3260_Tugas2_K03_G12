@@ -6,7 +6,8 @@ const scale = document.getElementById('scale')
 let selectedIdx = 0
 
 function app() {
-   gl.clear(gl.COLOR_BUFFER_BIT)
+   gl.enable(gl.DEPTH_TEST);
+   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
    for(let i = 0; i < objects.length; ++i) {
       objects[i].draw(gl)
    }
@@ -98,12 +99,6 @@ document.getElementById("load-btn").onclick = load;
  * Load
  */
 function load() {
-   // Confirmation
-   const confirmation = confirm("Do you want to continue? Existing objects will be discarded");
-   if (!confirmation) {
-       return;
-   }
-
    // Create upload element
    const uploadElement = document.createElement('input');
    uploadElement.type = "file";

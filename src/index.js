@@ -6,6 +6,9 @@ const z_angle = document.getElementById('z_angle')
 const scale = document.getElementById('scale')
 const load_btn = document.getElementById('load-btn')
 const camera_zoom = document.getElementById('camera_zoom')
+const camera_angle_x = document.getElementById('camera_angle_x')
+const camera_angle_y = document.getElementById('camera_angle_y')
+const camera_angle_z = document.getElementById('camera_angle_z')
 
 function app() {
    gl.enable(gl.DEPTH_TEST);
@@ -198,15 +201,22 @@ function fileUploaded(e) {
 }
 
 function cameraZoomHandler(distance){
-    view_matrix = [
-        1, 0, 0, 0,
-        0, 1, 0, 0,
-        0, 0, 1, 0,
-        0, 0, -1*parseFloat(distance), 1,
-    ];
-    // TODO: for selected object
-    objects[0].setViewMatrix(view_matrix);
+    objects[selectedIdx].moveCameraTo(distance);
 }
 camera_zoom.addEventListener("input", (e) => {
     cameraZoomHandler(e.target.value);
- })
+})
+
+function cameraRotationHandler(degree, axis){
+    radian = parseFloat(degree) * Math.PI / 180;
+    objects[selectedIdx].rotateCamera(radian, axis);
+}
+camera_angle_x.addEventListener("input", (e) => {
+    cameraRotationHandler(e.target.value, "x");
+})
+camera_angle_y.addEventListener("input", (e) => {
+    cameraRotationHandler(e.target.value, "y");
+})
+camera_angle_z.addEventListener("input", (e) => {
+    cameraRotationHandler(e.target.value, "z");
+})

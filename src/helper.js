@@ -123,3 +123,17 @@ function scalePoint(point, k) {
 
     return newPoint
 }
+
+function matrixMultiplication(A, B) {
+    let result = [];
+    for (let i = 0; i < 4; i++) {
+        for (let j = 0; j < 4; j++) {
+            let sum = 0;
+            for (let k = 0; k < 4; k++) {
+                sum += A[i*4+k] * B[k*4+j];
+            }
+            result.push(sum);
+        }
+    }
+    return result;
+}

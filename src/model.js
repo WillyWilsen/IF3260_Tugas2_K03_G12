@@ -35,9 +35,7 @@ class Model {
 
         this.proj_matrix = get_projection(40, canvas.width/canvas.height, 1, 100);
         this.mo_matrix = [ 1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1 ];
-        this.view_matrix = [ 1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1 ];
-
-        this.view_matrix[14] = this.view_matrix[14] - 5;
+        this.view_matrix = undefined;
 
         this.angle = {
             x: 0,
@@ -49,6 +47,32 @@ class Model {
             y: 0
         }
         this.scale = 1
+
+        this.camera_translation_matrix = [
+            1, 0, 0, 0,
+            0, 1, 0, 0,
+            0, 0, 1, 0,
+            0, 0, -5, 1,
+        ]
+        this.camera_x_matrix = [
+            1, 0, 0, 0,
+            0, 1, 0, 0,
+            0, 0, 1, 0,
+            0, 0, 0, 1,
+        ]
+        this.camera_y_matrix = [
+            1, 0, 0, 0,
+            0, 1, 0, 0,
+            0, 0, 1, 0,
+            0, 0, 0, 1,
+        ]
+        this.camera_z_matrix = [
+            1, 0, 0, 0,
+            0, 1, 0, 0,
+            0, 0, 1, 0,
+            0, 0, 0, 1,
+        ]
+        this.setViewMatrix();
     }
 
     set(colors, vertices) {
@@ -166,7 +190,42 @@ class Model {
         this.scale = scale
     }
 
-    setViewMatrix(view_matrix){
-        this.view_matrix = view_matrix;
+    setViewMatrix(){
+        // this.view_matrix = matrixMultiplication(this.camera_translation_matrix, this.camera_x_matrix);
+        // this.view_matrix = matrixMultiplication(this.view_matrix, this.camera_y_matrix);
+        // this.view_matrix = matrixMultiplication(this.view_matrix, this.camera_z_matrix);
+        this.view_matrix = matrixMultiplication(this.camera_z_matrix, this.camera_y_matrix);
+        this.view_matrix = matrixMultiplication(this.view_matrix, this.camera_x_matrix);
+        this.view_matrix = matrixMultiplication(this.view_matrix, this.camera_translation_matrix);
+        console.log(this.view_matrix)
+    }
+
+    moveCameraTo(distance){
+        this.camera_translation_matrix[14] = -1*parseFloat(distance);
+        this.setViewMatrix();
+    }
+
+    rotateCamera(angle, axis){
+        const s = Math.sin(angle)
+        const c = Math.cos(angle)
+        if (axis === "x"){
+            this.camera_x_matrix[5] = c;
+            this.camera_x_matrix[6] = -1 * s;
+            this.camera_x_matrix[9] = s;
+            this.camera_x_matrix[10] = c;
+        }
+        if (axis === "y"){
+            this.camera_y_matrix[0] = c;
+            this.camera_y_matrix[2] = s;
+            this.camera_y_matrix[8] = -1 * s;
+            this.camera_y_matrix[10] = c;
+        }
+        if (axis === "z"){
+            this.camera_z_matrix[0] = c;
+            this.camera_z_matrix[1] = -1 * s;
+            this.camera_z_matrix[4] = s;
+            this.camera_z_matrix[5] = c;
+        }
+        this.setViewMatrix();
     }
 }

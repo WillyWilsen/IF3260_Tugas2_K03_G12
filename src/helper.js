@@ -111,3 +111,15 @@ function movePoint(point, pos) {
 
     return newPoint
 }
+
+function scalePoint(point, k) {
+    const temp = point
+
+    const newPoint = {
+        x: temp.x * k,
+        y: temp.y * k,
+        z: temp.z * k
+    }
+
+    return newPoint
+}

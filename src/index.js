@@ -1,6 +1,7 @@
 const x_angle = document.getElementById('x_angle')
 const y_angle = document.getElementById('y_angle')
 const z_angle = document.getElementById('z_angle')
+const scale = document.getElementById('scale')
 
 let selectedIdx = 0
 
@@ -77,6 +78,16 @@ canvas.addEventListener("mouseup", (e) => {
 })
 canvas.addEventListener("mouseout", (e) => {
    isClicked = false
+})
+
+scale.addEventListener("input", (e) => {
+   const scale = e.target.value
+   const points = objects[selectedIdx].getPoints()
+   for(let i = 0; i < points.length; ++i) {
+      const scaledPoint = scalePoint(points[i], scale / objects[selectedIdx].scale)
+      objects[selectedIdx].setPoint(i, scaledPoint)
+   }
+   objects[selectedIdx].setScale(scale)
 })
 
 

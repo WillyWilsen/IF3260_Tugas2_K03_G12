@@ -48,6 +48,7 @@ class Model {
             x: 0,
             y: 0
         }
+        this.scale = 1
     }
 
     set(colors, vertices) {
@@ -166,5 +167,9 @@ class Model {
 
     setTranslation(translation) {
         this.translation = translation
+    }
+
+    setScale(scale) {
+        this.scale = scale
     }
 }

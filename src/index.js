@@ -151,11 +151,35 @@ load_btn.addEventListener("click", (e) => {
 */
 function changeSelected(idx) {
    selectedIdx = idx
-   model_selected.innerHTML = `<b>Model ${selectedIdx + 1}</b>`
+   model_selected.innerHTML = `Model Selected: <b>Model ${selectedIdx + 1}</b>`
    x_angle.value = objects[selectedIdx].angle.x
    y_angle.value = objects[selectedIdx].angle.y
    z_angle.value = objects[selectedIdx].angle.z
+   x_translation.value = objects[selectedIdx].translation.x
+   y_translation.value = objects[selectedIdx].translation.y
+   z_translation.value = objects[selectedIdx].translation.z
    scale.value = objects[selectedIdx].scale
+   camera_zoom.value = objects[selectedIdx].camera_zoom
+   camera_angle_x.value = objects[selectedIdx].camera_angle_x
+   camera_angle_y.value = objects[selectedIdx].camera_angle_y
+   camera_angle_z.value = objects[selectedIdx].camera_angle_z
+}
+
+/**
+ * Handle on reset selected model
+ */
+function resetSelected() {
+   x_angle.value = 0
+   y_angle.value = 0
+   z_angle.value = 0
+   x_translation.value = 0
+   y_translation.value = 0
+   z_translation.value = 0
+   scale.value = 1
+   camera_zoom.value = 5
+   camera_angle_x.value = 0
+   camera_angle_y.value = 0
+   camera_angle_z.value = 0
 }
 
 /**
@@ -211,17 +235,20 @@ function loadObjects(object_string, isLoading){
     const rawObject = JSON.parse(object_string);
     const model = new Model([], [], []);
     Object.assign(model, rawObject);
-
-    model_list.innerHTML += `
-    <button onclick="changeSelected(${objects.length})">
-        Model ${objects.length + 1}
-    </button>
-    `
     model.init(gl);
     objects.push(model);
     if (isLoading){
-        default_objects_string.push(object_string);
+      default_objects_string.push(object_string);
     }
+
+    model_selected.innerHTML = `Model Selected: <b>Model ${objects.length}</b>`
+    model_list.innerHTML += `
+    <button onclick="changeSelected(${objects.length - 1})">
+        Model ${objects.length}
+    </button>
+    `
+    selectedIdx = objects.length - 1
+    resetSelected()
 }
 
 /**

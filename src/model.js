@@ -74,6 +74,11 @@ class Model {
             0, 0, 0, 1,
         ]
         this.setViewMatrix();
+
+        this.camera_zoom = 5
+        this.camera_angle_x = 0
+        this.camera_angle_y = 0
+        this.camera_angle_z = 0
     }
 
     set(colors, vertices) {

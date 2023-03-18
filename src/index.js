@@ -3,6 +3,9 @@ const model_list = document.getElementById('model_list')
 const x_angle = document.getElementById('x_angle')
 const y_angle = document.getElementById('y_angle')
 const z_angle = document.getElementById('z_angle')
+const x_translation = document.getElementById('x_translation')
+const y_translation = document.getElementById('y_translation')
+const z_translation = document.getElementById('z_translation')
 const scale = document.getElementById('scale')
 const load_btn = document.getElementById('load-btn')
 const camera_zoom = document.getElementById('camera_zoom')
@@ -58,22 +61,33 @@ function rotateEventListener(e, axis) {
 /**
 * Handle on moving model
 * @param {Event} e
+* @param {String} axis 
 */
-function moveEventListener(e) {
-   if (isClicked) {
-      var rect = canvas.getBoundingClientRect()
-      const pos = {
-         x: e.clientX - rect.left,
-         y: e.clientY - rect.top
-      }
-      const convertedPoint = convertPoint(rect, pos)
-      const distance = substractPoint(convertedPoint, objects[selectedIdx].translation)
-      const points = objects[selectedIdx].getPoints()
-      for(let i = 0; i < points.length; ++i) {
-         const movedPoint = movePoint(points[i], distance)
-         objects[selectedIdx].setPoint(i, movedPoint)
-      }
-      objects[selectedIdx].setTranslation(convertedPoint)
+function moveEventListener(e, axis) {
+   const translation = e.target.value
+   const points = objects[selectedIdx].getPoints()
+   for(let i = 0; i < points.length; ++i) {
+      const movedPoint = movePoint(points[i], translation - eval(`objects[selectedIdx].translation.${axis}`), axis)
+      objects[selectedIdx].setPoint(i, movedPoint)
+   }
+   if (axis === 'x') {
+      objects[selectedIdx].setTranslation({
+         x: translation,
+         y: objects[selectedIdx].translation.y,
+         z: objects[selectedIdx].translation.z
+      })
+   } else if (axis === 'y') {
+      objects[selectedIdx].setTranslation({
+         x: objects[selectedIdx].translation.x,
+         y: translation,
+         z: objects[selectedIdx].translation.z
+      })
+   } else if (axis === 'z') {
+      objects[selectedIdx].setTranslation({
+         x: objects[selectedIdx].translation.x,
+         y: objects[selectedIdx].translation.y,
+         z: translation
+      })
    }
 }
 
@@ -107,17 +121,14 @@ z_angle.addEventListener("input", (e) => {
 /**
  * Handle move event listener
  */
-canvas.addEventListener("mousedown", () => {
-   isClicked = true
+x_translation.addEventListener("input", (e) => {
+   moveEventListener(e, 'x')
 })
-canvas.addEventListener("mousemove", (e) => {
-   moveEventListener(e)
+y_translation.addEventListener("input", (e) => {
+   moveEventListener(e, 'y')
 })
-canvas.addEventListener("mouseup", () => {
-   isClicked = false
-})
-canvas.addEventListener("mouseout", () => {
-   isClicked = false
+z_translation.addEventListener("input", (e) => {
+   moveEventListener(e, 'z')
 })
 
 /**

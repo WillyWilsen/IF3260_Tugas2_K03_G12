@@ -45,18 +45,18 @@ function rotatePoint(point, angle, anchor, type) {
         rotatedPoint = {
             x: newPoint.x,
             y: newPoint.y * c - newPoint.z * s,
-            z: newPoint.y * s + newPoint.z * c
+            z: newPoint.z * c + newPoint.y * s
         }
     } else if (type === 'y') {
         rotatedPoint = {
-            x: newPoint.x * c - newPoint.z * s,
+            x: newPoint.x * c + newPoint.z * s,
             y: newPoint.y,
-            z: newPoint.x * s + newPoint.z * c,
+            z: newPoint.z * c - newPoint.x * s,
         }
     } else if (type === 'z') {
         rotatedPoint = {
             x: newPoint.x * c - newPoint.y * s,
-            y: newPoint.x * s + newPoint.y * c,
+            y: newPoint.y * c + newPoint.x * s,
             z: newPoint.z
         }
     }
@@ -68,48 +68,37 @@ function rotatePoint(point, angle, anchor, type) {
     return rotatedPoint
 }
 
-function convertPoint(rect, point) {
-    if(!point.hasOwnProperty("x")) {
-        throw new Error("Point passed lacks the key for x")
-    }
-    if(!point.hasOwnProperty("y")) {
-        throw new Error("Point passed lacks the key for y")
-    }
-    const result = {
-        x: 0,
-        y: 0
-    }
-
-    result.x = point.x - (rect.width / 2)
-    result.y = point.y - (rect.height / 2)
-
-    result.x = result.x / (rect.width / 2)
-    result.y = result.y / (rect.height / 2)
-    result.y = (-1) * result.y
-
-    return result
-}
-
-function substractPoint(point, pos) {
-    const newPoint = {
-        x: point.x - pos.x,
-        y: point.y - pos.y
-    }
-
-    console.log(newPoint)
-    return newPoint
-}
-
-function movePoint(point, pos) {
+function movePoint(point, distance, type) {
     const temp = point
 
     const newPoint = {
-        x: temp.x + pos.x,
-        y: temp.y + pos.y,
+        x: temp.x,
+        y: temp.y,
         z: temp.z
     }
 
-    return newPoint
+    let movedPoint = {}
+    if (type === 'x') {
+        movedPoint = {
+            x: newPoint.x + distance,
+            y: newPoint.y,
+            z: newPoint.z
+        }
+    } else if (type === 'y') {
+        movedPoint = {
+            x: newPoint.x,
+            y: newPoint.y + distance,
+            z: newPoint.z
+        }
+    } else if (type === 'z') {
+        movedPoint = {
+            x: newPoint.x,
+            y: newPoint.y,
+            z: newPoint.z + distance
+        }
+    }
+
+    return movedPoint
 }
 
 function scalePoint(point, k) {

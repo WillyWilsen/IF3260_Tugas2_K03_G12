@@ -44,7 +44,8 @@ class Model {
         }
         this.translation = {
             x: 0,
-            y: 0
+            y: 0,
+            z: 0
         }
         this.scale = 1
 

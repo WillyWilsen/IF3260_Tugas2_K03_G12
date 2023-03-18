@@ -3,19 +3,28 @@ html, body {
     padding: 0;
 }
 
+body{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.container {
+    padding: 20px;
+    display: flex;
+    border: 1px solid black;
+}
+
+#div-canvas {
+    aspect-ratio: 1/1;
+}
+
 canvas {
     background-color: lightgrey;
-    /* width: 100%;
-    height: 100%; */
 }
 
-.div-canvas {
-    aspect-ratio: 1/1;
-    height: 100vh;
-}
-
-body {
-    display: flex;
+#div-tools{
+    margin-left: 10px;
 }
 
 .horizontal {
@@ -26,9 +35,19 @@ body {
 .vertical {
     display: flex;
     flex-direction: column;
-    padding: 2em;
 }
 
 .buttons {
     align-items: center;
 }
+
+h3{
+    margin: 0;
+    margin-top: 12px;
+}
+
+button{
+    margin: 5px 5px 5px 0;
+}
+
+

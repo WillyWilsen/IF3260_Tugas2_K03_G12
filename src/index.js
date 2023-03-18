@@ -9,6 +9,7 @@ const camera_zoom = document.getElementById('camera_zoom')
 const camera_angle_x = document.getElementById('camera_angle_x')
 const camera_angle_y = document.getElementById('camera_angle_y')
 const camera_angle_z = document.getElementById('camera_angle_z')
+const reset = document.getElementById('reset')
 
 function app() {
    gl.enable(gl.DEPTH_TEST);
@@ -183,21 +184,33 @@ function fileUploaded(e) {
 
    // Setting file reader on load
    reader.onload = (e) => {
-      const rawObject = JSON.parse(e.target.result);
-      const model = new Model([], [], []);
-      Object.assign(model, rawObject);
-   
-      model_list.innerHTML += `
-      <button onclick="changeSelected(${objects.length})">
-         Model ${objects.length + 1}
-      </button>
-      `
-      model.init(gl);
-      objects.push(model);
+        loadObjects(e.target.result, true);
    }
    
    // Begin reading
    reader.readAsText(file)
+}
+
+/**
+ * Load object_string to objects
+ * @param {String} object_string 
+ * @param {Boolean} isLoading 
+ */
+function loadObjects(object_string, isLoading){
+    const rawObject = JSON.parse(object_string);
+    const model = new Model([], [], []);
+    Object.assign(model, rawObject);
+
+    model_list.innerHTML += `
+    <button onclick="changeSelected(${objects.length})">
+        Model ${objects.length + 1}
+    </button>
+    `
+    model.init(gl);
+    objects.push(model);
+    if (isLoading){
+        default_objects_string.push(object_string);
+    }
 }
 
 /**
@@ -229,3 +242,15 @@ camera_angle_y.addEventListener("input", (e) => {
 camera_angle_z.addEventListener("input", (e) => {
     cameraRotationHandler(e.target.value, "z");
 })
+
+/**
+ * Handle reset
+ */
+reset.addEventListener("click", (e) => {
+    objects = [];
+    model_list.innerHTML = ``;
+    default_objects_string.forEach(default_object_string => {
+        loadObjects(default_object_string, false);
+    });
+})
+

@@ -191,13 +191,9 @@ class Model {
     }
 
     setViewMatrix(){
-        // this.view_matrix = matrixMultiplication(this.camera_translation_matrix, this.camera_x_matrix);
-        // this.view_matrix = matrixMultiplication(this.view_matrix, this.camera_y_matrix);
-        // this.view_matrix = matrixMultiplication(this.view_matrix, this.camera_z_matrix);
         this.view_matrix = matrixMultiplication(this.camera_z_matrix, this.camera_y_matrix);
         this.view_matrix = matrixMultiplication(this.view_matrix, this.camera_x_matrix);
         this.view_matrix = matrixMultiplication(this.view_matrix, this.camera_translation_matrix);
-        console.log(this.view_matrix)
     }
 
     moveCameraTo(distance){
@@ -229,3 +225,4 @@ class Model {
         this.setViewMatrix();
     }
 }
+

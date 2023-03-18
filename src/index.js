@@ -1,9 +1,10 @@
+const model_selected = document.getElementById('model_selected')
+const model_list = document.getElementById('model_list')
 const x_angle = document.getElementById('x_angle')
 const y_angle = document.getElementById('y_angle')
 const z_angle = document.getElementById('z_angle')
 const scale = document.getElementById('scale')
-
-let selectedIdx = 0
+const load_btn = document.getElementById('load-btn')
 
 function app() {
    gl.enable(gl.DEPTH_TEST);
@@ -15,7 +16,13 @@ function app() {
 }
 setTimeout(app)
 
-function rotateEventListener(angle, axis) {
+/**
+* Handle on rotating model
+* @param {Event} e
+* @param {String} axis 
+*/
+function rotateEventListener(e, axis) {
+   const angle = e.target.value
    const points = objects[selectedIdx].getPoints()
    const midpoint = calculateMidpoint(points)
    for(let i = 0; i < points.length; ++i) {
@@ -43,21 +50,11 @@ function rotateEventListener(angle, axis) {
    }
 }
 
-x_angle.addEventListener("input", (e) => {
-   rotateEventListener(e.target.value, 'x')
-})
-y_angle.addEventListener("input", (e) => {
-   rotateEventListener(e.target.value, 'y')
-})
-z_angle.addEventListener("input", (e) => {
-   rotateEventListener(e.target.value, 'z')
-})
-
-
-canvas.addEventListener("mousedown", (e) => {
-   isClicked = true
-})
-canvas.addEventListener("mousemove", (e) => {
+/**
+* Handle on moving model
+* @param {Event} e
+*/
+function moveEventListener(e) {
    if (isClicked) {
       var rect = canvas.getBoundingClientRect()
       const pos = {
@@ -73,15 +70,13 @@ canvas.addEventListener("mousemove", (e) => {
       }
       objects[selectedIdx].setTranslation(convertedPoint)
    }
-})
-canvas.addEventListener("mouseup", (e) => {
-   isClicked = false
-})
-canvas.addEventListener("mouseout", (e) => {
-   isClicked = false
-})
+}
 
-scale.addEventListener("input", (e) => {
+/**
+* Handle on scaling model
+* @param {Event} e
+*/
+function scaleEventListener(e) {
    const scale = e.target.value
    const points = objects[selectedIdx].getPoints()
    for(let i = 0; i < points.length; ++i) {
@@ -89,11 +84,63 @@ scale.addEventListener("input", (e) => {
       objects[selectedIdx].setPoint(i, scaledPoint)
    }
    objects[selectedIdx].setScale(scale)
+}
+
+/**
+ * Handle rotate event listener
+ */
+x_angle.addEventListener("input", (e) => {
+   rotateEventListener(e, 'x')
+})
+y_angle.addEventListener("input", (e) => {
+   rotateEventListener(e, 'y')
+})
+z_angle.addEventListener("input", (e) => {
+   rotateEventListener(e, 'z')
 })
 
+/**
+ * Handle move event listener
+ */
+canvas.addEventListener("mousedown", () => {
+   isClicked = true
+})
+canvas.addEventListener("mousemove", (e) => {
+   moveEventListener(e)
+})
+canvas.addEventListener("mouseup", () => {
+   isClicked = false
+})
+canvas.addEventListener("mouseout", () => {
+   isClicked = false
+})
 
-document.getElementById("load-btn").onclick = load;
+/**
+ * Handle scale event listener
+ */
+scale.addEventListener("input", (e) => {
+   scaleEventListener(e)
+})
 
+/**
+ * Handle load file event listener
+ */
+load_btn.addEventListener("click", (e) => {
+   load()
+})
+
+/**
+* Handle on change selected model
+* @param {Event} e
+*/
+function changeSelected(idx) {
+   selectedIdx = idx
+   model_selected.innerHTML = `<b>Model ${selectedIdx + 1}</b>`
+   x_angle.value = objects[selectedIdx].angle.x
+   y_angle.value = objects[selectedIdx].angle.y
+   z_angle.value = objects[selectedIdx].angle.z
+   scale.value = objects[selectedIdx].scale
+}
 
 /**
  * Load
@@ -136,6 +183,11 @@ function fileUploaded(e) {
       const model = new Model([], [], []);
       Object.assign(model, rawObject);
    
+      model_list.innerHTML += `
+      <button onclick="changeSelected(${objects.length})">
+         Model ${objects.length + 1}
+      </button>
+      `
       model.init(gl);
       objects.push(model);
    }

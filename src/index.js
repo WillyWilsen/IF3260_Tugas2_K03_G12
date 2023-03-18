@@ -200,6 +200,10 @@ function fileUploaded(e) {
    reader.readAsText(file)
 }
 
+/**
+ * Handle from moving camera to z = distance
+ * @param {String} distance 
+ */
 function cameraZoomHandler(distance){
     objects[selectedIdx].moveCameraTo(distance);
 }
@@ -207,6 +211,11 @@ camera_zoom.addEventListener("input", (e) => {
     cameraZoomHandler(e.target.value);
 })
 
+/**
+ * Handle rotating camera with object as center of rotation
+ * @param {String} degree 
+ * @param {String} axis 
+ */
 function cameraRotationHandler(degree, axis){
     radian = parseFloat(degree) * Math.PI / 180;
     objects[selectedIdx].rotateCamera(radian, axis);

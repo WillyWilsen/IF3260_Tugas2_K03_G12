@@ -5,6 +5,7 @@ const y_angle = document.getElementById('y_angle')
 const z_angle = document.getElementById('z_angle')
 const scale = document.getElementById('scale')
 const load_btn = document.getElementById('load-btn')
+const camera_zoom = document.getElementById('camera_zoom')
 
 function app() {
    gl.enable(gl.DEPTH_TEST);
@@ -195,3 +196,17 @@ function fileUploaded(e) {
    // Begin reading
    reader.readAsText(file)
 }
+
+function cameraZoomHandler(distance){
+    view_matrix = [
+        1, 0, 0, 0,
+        0, 1, 0, 0,
+        0, 0, 1, 0,
+        0, 0, -1*parseFloat(distance), 1,
+    ];
+    // TODO: for selected object
+    objects[0].setViewMatrix(view_matrix);
+}
+camera_zoom.addEventListener("input", (e) => {
+    cameraZoomHandler(e.target.value);
+ })

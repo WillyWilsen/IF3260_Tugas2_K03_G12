@@ -165,4 +165,8 @@ class Model {
     setScale(scale) {
         this.scale = scale
     }
+
+    setViewMatrix(view_matrix){
+        this.view_matrix = view_matrix;
+    }
 }

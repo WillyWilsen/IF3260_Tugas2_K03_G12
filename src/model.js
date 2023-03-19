@@ -33,7 +33,7 @@ class Model {
         this.vertexShader = undefined
         this.fragmentShader = undefined
 
-        this.proj_matrix = get_projection(40, canvas.width/canvas.height, 1, 100);
+        this.proj_matrix = getPerspectiveProjection(45, canvas.width/canvas.height, -1, 1);
         this.mo_matrix = [ 1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1 ];
         this.view_matrix = undefined;
 

@@ -1,5 +1,8 @@
 const model_selected = document.getElementById('model_selected')
 const model_list = document.getElementById('model_list')
+const ortographic_btn = document.getElementById('orthographic-btn')
+const perspective_btn = document.getElementById('perspective-btn')
+const oblique_btn = document.getElementById('oblique-btn')
 const x_angle = document.getElementById('x_angle')
 const y_angle = document.getElementById('y_angle')
 const z_angle = document.getElementById('z_angle')
@@ -20,9 +23,43 @@ function app() {
    for(let i = 0; i < objects.length; ++i) {
       objects[i].draw(gl)
    }
-   setTimeout(app)
+   setTimeout(app, 16)
 }
-setTimeout(app)
+setTimeout(app, 16)
+
+/**
+ * Handle on projection change
+ * @param {Event} e 
+ * @param {string} type 
+ */
+function projectionEventListener(e, type) {
+   projectionMode = type;
+   ortographic_btn.style = 'font-weight: normal;';
+   perspective_btn.style = 'font-weight: normal;';
+   oblique_btn.style = 'font-weight: normal;';
+
+   if (type == 'orthographic') {
+      objects.forEach(model => {
+         model.proj_matrix = getOrthogonalProjection(-4, 4, -4, 4, -2, 10);
+      });
+      ortographic_btn.style = 'font-weight: bold;';
+   } else if (type == 'perspective') {
+      objects.forEach(model => {
+         model.proj_matrix = getPerspectiveProjection(45, canvas.width/canvas.height, -1, 1);
+      });
+      perspective_btn.style = 'font-weight: bold;';
+   } else if (type == 'oblique') {
+      objects.forEach(model => {
+         model.proj_matrix = getObliqueProjection(-45, -45, 2, 10, 2, 10, -2, 10);
+      });
+      oblique_btn.style = 'font-weight: bold;';
+   }
+}
+
+ortographic_btn.addEventListener('click', (e) => projectionEventListener(e, 'orthographic'));
+perspective_btn.addEventListener('click', (e) => projectionEventListener(e, 'perspective'));
+oblique_btn.addEventListener('click', (e) => projectionEventListener(e, 'oblique'));
+perspective_btn.click();
 
 /**
 * Handle on rotating model
@@ -247,8 +284,9 @@ function loadObjects(object_string, isLoading){
         Model ${objects.length}
     </button>
     `
-    selectedIdx = objects.length - 1
-    resetSelected()
+    selectedIdx = objects.length - 1;
+    resetSelected();
+    projectionEventListener(null, projectionMode);
 }
 
 /**

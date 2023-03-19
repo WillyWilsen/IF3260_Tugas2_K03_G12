@@ -16,7 +16,7 @@ class Model {
         attribute vec3 color;
         varying vec3 vColor;
         void main(void) { 
-            gl_Position = Pmatrix*Vmatrix*Mmatrix*vec4(position, 1);
+            gl_Position = vec4(position, 1)*Mmatrix*Vmatrix*Pmatrix;
             vColor = color;
         }
         `
@@ -52,8 +52,8 @@ class Model {
         this.camera_translation_matrix = [
             1, 0, 0, 0,
             0, 1, 0, 0,
-            0, 0, 1, 0,
-            0, 0, -5, 1,
+            0, 0, 1, -5,
+            0, 0, 0, 1,
         ]
         this.camera_x_matrix = [
             1, 0, 0, 0,
@@ -197,13 +197,13 @@ class Model {
     }
 
     setViewMatrix(){
-        this.view_matrix = matrixMultiplication(this.camera_z_matrix, this.camera_y_matrix);
-        this.view_matrix = matrixMultiplication(this.view_matrix, this.camera_x_matrix);
-        this.view_matrix = matrixMultiplication(this.view_matrix, this.camera_translation_matrix);
+        this.view_matrix = matrixMultiplication(this.camera_translation_matrix, this.camera_x_matrix);
+        this.view_matrix = matrixMultiplication(this.view_matrix, this.camera_y_matrix);
+        this.view_matrix = matrixMultiplication(this.view_matrix, this.camera_z_matrix);
     }
 
     moveCameraTo(distance){
-        this.camera_translation_matrix[14] = -1*parseFloat(distance);
+        this.camera_translation_matrix[11] = -1*parseFloat(distance);
         this.setViewMatrix();
     }
 

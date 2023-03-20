@@ -79,6 +79,7 @@ class Model {
         this.camera_angle_x = 0
         this.camera_angle_y = 0
         this.camera_angle_z = 0
+
     }
 
     set(colors, vertices) {
@@ -121,6 +122,9 @@ class Model {
      * @param {WebGLRenderingContext} gl 
      */
     draw(gl) {
+
+        this.setNormal();
+
         const vertexBuffer = gl.createBuffer()
         gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer)
         gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.vertices), gl.STATIC_DRAW)
@@ -229,6 +233,58 @@ class Model {
             this.camera_z_matrix[5] = c;
         }
         this.setViewMatrix();
+    }
+
+    setNormal(){
+
+        this.normal = [];
+        let p1, p2, p3;
+        let v21, v31;
+        let n, l;
+
+        for(let i=0; i<this.faces.length; i+=3){
+            
+            p1 = {
+                x: this.vertices[this.faces[i]*3],
+                y: this.vertices[this.faces[i]*3+1],
+                z: this.vertices[this.faces[i]*3+2],
+            }
+            p2 = {
+                x: this.vertices[this.faces[i+1]*3],
+                y: this.vertices[this.faces[i+1]*3+1],
+                z: this.vertices[this.faces[i+1]*3+2],
+            }
+            p3 = {
+                x: this.vertices[this.faces[i+2]*3],
+                y: this.vertices[this.faces[i+2]*3+1],
+                z: this.vertices[this.faces[i+2]*3+2],
+            }
+
+            v21 = {
+                x: p2.x - p1.x,
+                y: p2.y - p1.y,
+                z: p2.z - p1.z,
+            }
+            v31 = {
+                x: p3.x - p1.x,
+                y: p3.y - p1.y,
+                z: p3.z - p1.z,
+            }
+
+            n = {
+                x: ((v21.y*v31.z) - (v21.z*v31.y)),
+                y: ((v21.z*v31.x) - (v21.x*v31.z)),
+                z: ((v21.x*v31.y) - (v21.y*v31.x)),
+            }
+
+            l = Math.sqrt(n.x*n.x + n.y*n.y + n.z*n.z);
+            n.x /= l;
+            n.y /= l;
+            n.z /= l;
+
+            this.normal.push(n.x, n.y, n.z);
+
+        }
     }
 }
 

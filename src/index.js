@@ -3,13 +3,13 @@ const model_list = document.getElementById('model_list')
 const ortographic_btn = document.getElementById('orthographic-btn')
 const perspective_btn = document.getElementById('perspective-btn')
 const oblique_btn = document.getElementById('oblique-btn')
-const x_angle = document.getElementById('x_angle')
-const y_angle = document.getElementById('y_angle')
-const z_angle = document.getElementById('z_angle')
-const x_translation = document.getElementById('x_translation')
-const y_translation = document.getElementById('y_translation')
-const z_translation = document.getElementById('z_translation')
-const scale = document.getElementById('scale')
+const model_angle_x = document.getElementById('model_angle_x')
+const model_angle_y = document.getElementById('model_angle_y')
+const model_angle_z = document.getElementById('model_angle_z')
+const model_translation_x = document.getElementById('model_translation_x')
+const model_translation_y = document.getElementById('model_translation_y')
+const model_translation_z = document.getElementById('model_translation_z')
+const model_scale = document.getElementById('model_scale')
 const load_btn = document.getElementById('load-btn')
 const camera_zoom = document.getElementById('camera_zoom')
 const camera_angle_x = document.getElementById('camera_angle_x')
@@ -62,117 +62,51 @@ oblique_btn.addEventListener('click', (e) => projectionEventListener(e, 'oblique
 perspective_btn.click();
 
 /**
-* Handle on rotating model
-* @param {Event} e
-* @param {String} axis 
-*/
-function rotateEventListener(e, axis) {
-   const angle = e.target.value
-   const points = objects[selectedIdx].getPoints()
-   const midpoint = calculateMidpoint(points)
-   for(let i = 0; i < points.length; ++i) {
-      const rotatedPoint = rotatePoint(points[i], angle - eval(`objects[selectedIdx].angle.${axis}`), midpoint, axis)
-      objects[selectedIdx].setPoint(i, rotatedPoint)
-   }
-   if (axis === 'x') {
-      objects[selectedIdx].setAngle({
-         x: angle,
-         y: objects[selectedIdx].angle.y,
-         z: objects[selectedIdx].angle.z
-      })
-   } else if (axis === 'y') {
-      objects[selectedIdx].setAngle({
-         x: objects[selectedIdx].angle.x,
-         y: angle,
-         z: objects[selectedIdx].angle.z
-      })
-   } else if (axis === 'z') {
-      objects[selectedIdx].setAngle({
-         x: objects[selectedIdx].angle.x,
-         y: objects[selectedIdx].angle.y,
-         z: angle
-      })
-   }
-}
-
-/**
-* Handle on moving model
-* @param {Event} e
-* @param {String} axis 
-*/
-function moveEventListener(e, axis) {
-   const translation = e.target.value
-   const points = objects[selectedIdx].getPoints()
-   for(let i = 0; i < points.length; ++i) {
-      const movedPoint = movePoint(points[i], translation - eval(`objects[selectedIdx].translation.${axis}`), axis)
-      objects[selectedIdx].setPoint(i, movedPoint)
-   }
-   if (axis === 'x') {
-      objects[selectedIdx].setTranslation({
-         x: translation,
-         y: objects[selectedIdx].translation.y,
-         z: objects[selectedIdx].translation.z
-      })
-   } else if (axis === 'y') {
-      objects[selectedIdx].setTranslation({
-         x: objects[selectedIdx].translation.x,
-         y: translation,
-         z: objects[selectedIdx].translation.z
-      })
-   } else if (axis === 'z') {
-      objects[selectedIdx].setTranslation({
-         x: objects[selectedIdx].translation.x,
-         y: objects[selectedIdx].translation.y,
-         z: translation
-      })
-   }
-}
-
-/**
-* Handle on scaling model
-* @param {Event} e
-*/
-function scaleEventListener(e) {
-   const scale = e.target.value
-   const points = objects[selectedIdx].getPoints()
-   for(let i = 0; i < points.length; ++i) {
-      const scaledPoint = scalePoint(points[i], scale / objects[selectedIdx].scale)
-      objects[selectedIdx].setPoint(i, scaledPoint)
-   }
-   objects[selectedIdx].setScale(scale)
-}
-
-/**
- * Handle rotate event listener
+ * Handle rotating model with object as center of rotation
+ * @param {String} degree 
+ * @param {String} axis 
  */
-x_angle.addEventListener("input", (e) => {
-   rotateEventListener(e, 'x')
+function modelRotationHandler(degree, axis){
+   objects[selectedIdx].rotateModel(parseFloat(degree), axis);
+}
+model_angle_x.addEventListener("input", (e) => {
+   modelRotationHandler(e.target.value, "x");
 })
-y_angle.addEventListener("input", (e) => {
-   rotateEventListener(e, 'y')
+model_angle_y.addEventListener("input", (e) => {
+   modelRotationHandler(e.target.value, "y");
 })
-z_angle.addEventListener("input", (e) => {
-   rotateEventListener(e, 'z')
-})
-
-/**
- * Handle move event listener
- */
-x_translation.addEventListener("input", (e) => {
-   moveEventListener(e, 'x')
-})
-y_translation.addEventListener("input", (e) => {
-   moveEventListener(e, 'y')
-})
-z_translation.addEventListener("input", (e) => {
-   moveEventListener(e, 'z')
+model_angle_z.addEventListener("input", (e) => {
+   modelRotationHandler(e.target.value, "z");
 })
 
 /**
- * Handle scale event listener
+ * Handle moving model
+ * @param {String} distance 
+ * @param {String} axis 
  */
-scale.addEventListener("input", (e) => {
-   scaleEventListener(e)
+function modelMoveHandler(distance, axis){
+   objects[selectedIdx].moveModel(distance, axis);
+}
+model_translation_x.addEventListener("input", (e) => {
+   modelMoveHandler(e.target.value, "x");
+})
+model_translation_y.addEventListener("input", (e) => {
+   modelMoveHandler(e.target.value, "y");
+})
+model_translation_z.addEventListener("input", (e) => {
+   modelMoveHandler(e.target.value, "z");
+})
+
+/**
+ * Handle scaling model
+ * @param {String} k 
+ * @param {String} axis 
+ */
+function modelScaleModel(k){
+   objects[selectedIdx].scaleModel(k);
+}
+model_scale.addEventListener("input", (e) => {
+   modelScaleModel(e.target.value);
 })
 
 /**
@@ -189,13 +123,13 @@ load_btn.addEventListener("click", (e) => {
 function changeSelected(idx) {
    selectedIdx = idx
    model_selected.innerHTML = `Model Selected: <b>Model ${selectedIdx + 1}</b>`
-   x_angle.value = objects[selectedIdx].angle.x
-   y_angle.value = objects[selectedIdx].angle.y
-   z_angle.value = objects[selectedIdx].angle.z
-   x_translation.value = objects[selectedIdx].translation.x
-   y_translation.value = objects[selectedIdx].translation.y
-   z_translation.value = objects[selectedIdx].translation.z
-   scale.value = objects[selectedIdx].scale
+   model_angle_x.value = objects[selectedIdx].model_angle_x
+   model_angle_y.value = objects[selectedIdx].model_angle_y
+   model_angle_z.value = objects[selectedIdx].model_angle_z
+   model_translation_x.value = objects[selectedIdx].model_translation_x
+   model_translation_y.value = objects[selectedIdx].model_translation_y
+   model_translation_z.value = objects[selectedIdx].model_translation_z
+   model_scale.value = objects[selectedIdx].model_scale
    camera_zoom.value = objects[selectedIdx].camera_zoom
    camera_angle_x.value = objects[selectedIdx].camera_angle_x
    camera_angle_y.value = objects[selectedIdx].camera_angle_y
@@ -206,13 +140,13 @@ function changeSelected(idx) {
  * Handle on reset selected model
  */
 function resetSelected() {
-   x_angle.value = 0
-   y_angle.value = 0
-   z_angle.value = 0
-   x_translation.value = 0
-   y_translation.value = 0
-   z_translation.value = 0
-   scale.value = 1
+   model_angle_x.value = 0
+   model_angle_y.value = 0
+   model_angle_z.value = 0
+   model_translation_x.value = 0
+   model_translation_y.value = 0
+   model_translation_z.value = 0
+   model_scale.value = 1
    camera_zoom.value = 5
    camera_angle_x.value = 0
    camera_angle_y.value = 0
@@ -306,8 +240,7 @@ camera_zoom.addEventListener("input", (e) => {
  * @param {String} axis 
  */
 function cameraRotationHandler(degree, axis){
-    radian = parseFloat(degree) * Math.PI / 180;
-    objects[selectedIdx].rotateCamera(radian, axis);
+    objects[selectedIdx].rotateCamera(parseFloat(degree), axis);
 }
 camera_angle_x.addEventListener("input", (e) => {
     cameraRotationHandler(e.target.value, "x");

@@ -16,6 +16,7 @@ const camera_angle_x = document.getElementById('camera_angle_x')
 const camera_angle_y = document.getElementById('camera_angle_y')
 const camera_angle_z = document.getElementById('camera_angle_z')
 const reset = document.getElementById('reset')
+const shadingCheckbox = document.getElementById('shadingCheckbox')
 
 function app() {
    gl.enable(gl.DEPTH_TEST);
@@ -262,4 +263,12 @@ reset.addEventListener("click", (e) => {
         loadObjects(default_object_string, false);
     });
 })
+
+shadingCheckbox.addEventListener('change', function() {
+    if(this.checked) {
+        objects[selectedIdx].setShadingOn(true);
+    } else {
+        objects[selectedIdx].setShadingOn(false);
+    }
+  });
 

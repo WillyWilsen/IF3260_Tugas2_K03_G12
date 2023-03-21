@@ -15,17 +15,40 @@ class Model {
         uniform mat4 Mmatrix;
         attribute vec3 color;
         varying vec3 vColor;
+
+        attribute vec3 normal;
+        uniform mat4 TransformNormalMatrix;
+        varying vec3 vLighting;
+
+        uniform bool shadingOn;
+
         void main(void) { 
             gl_Position = vec4(position, 1)*Mmatrix*Vmatrix*Pmatrix;
             vColor = color;
+
+            if (shadingOn){
+                vec3 ambientLight = vec3(0.3, 0.3, 0.3);
+                vec3 directionalLightColor = vec3(0.35, 0.35, 0.35);
+                vec3 directionalVector = normalize(vec3(1, 1, 1));
+    
+                vec4 transformedNormal = TransformNormalMatrix * vec4(normal, 1.0);
+
+                float directional = max(dot(transformedNormal.xyz, directionalVector), 0.0);
+                vLighting = ambientLight + (directionalLightColor * directional);
+            } else {
+                vLighting = vec3(1,1,1);
+            }
         }
         `
 
         this.fragmentShaderCode = `
         precision mediump float;
         varying vec3 vColor;
+
+        varying vec3 vLighting;
+
         void main() {
-            gl_FragColor = vec4(vColor, 1);
+            gl_FragColor = vec4(vColor.rgb * vLighting, 1.0);
         }
         `
 
@@ -101,12 +124,25 @@ class Model {
             0, 0, 1, 0,
             0, 0, 0, 1,
         ]
-        this.setViewMatrix();
-
+        
         this.camera_zoom = 5
         this.camera_angle_x = 0
         this.camera_angle_y = 0
         this.camera_angle_z = 0
+        
+        this.isNormalEmpty = true;
+        this.transform_normal_matrix = undefined;
+
+        this.setViewMatrix();
+        this.setTransformNormalMatrix();
+
+        this.shadingOn = false;
+
+    }
+
+    set(colors, vertices) {
+        this.colors = colors;
+        this.vertices = vertices;
     }
 
     /**
@@ -137,6 +173,8 @@ class Model {
         this._Pmatrix = gl.getUniformLocation(this.program, "Pmatrix");
         this._Vmatrix = gl.getUniformLocation(this.program, "Vmatrix");
         this._Mmatrix = gl.getUniformLocation(this.program, "Mmatrix");
+        this._TransformNormalMatrix = gl.getUniformLocation(this.program, "TransformNormalMatrix");
+        this._ShadingOn = gl.getUniformLocation(this.program, "shadingOn");
     }
 
     /**
@@ -145,7 +183,13 @@ class Model {
      */
     draw(gl) {
 
-        this.setNormal();
+        if (this.isNormalEmpty){
+            this.setNormal();
+            this.isNormalEmpty = false;
+            if (this.normal.length == this.faces.length * 3){
+                console.log(this.normal);
+            }
+        }
 
         const vertexBuffer = gl.createBuffer()
         gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer)
@@ -167,11 +211,22 @@ class Model {
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, index_buffer);
         gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(this.faces), gl.STATIC_DRAW);
 
+        const normal_buffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, normal_buffer);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.normal), gl.STATIC_DRAW);
+        
+        const normalLocation = gl.getAttribLocation(this.program, 'normal');
+        gl.enableVertexAttribArray(normalLocation);
+        gl.vertexAttribPointer(normalLocation, 3, gl.FLOAT, false, 0, 0);
+
         gl.useProgram(this.program)
 
         gl.uniformMatrix4fv(this._Pmatrix, false, this.proj_matrix);
         gl.uniformMatrix4fv(this._Vmatrix, false, this.view_matrix);
         gl.uniformMatrix4fv(this._Mmatrix, false, this.model_matrix);
+        gl.uniformMatrix4fv(this._TransformNormalMatrix, false, this.transform_normal_matrix);
+
+        gl.uniform1i(this._ShadingOn, this.shadingOn);
 
         gl.drawElements(gl.TRIANGLES, this.faces.length, gl.UNSIGNED_SHORT, 0);
     }
@@ -181,6 +236,17 @@ class Model {
         this.model_matrix = matrixMultiplication(this.model_matrix, this.model_y_matrix);
         this.model_matrix = matrixMultiplication(this.model_matrix, this.model_z_matrix);
         this.model_matrix = matrixMultiplication(this.model_matrix, this.model_center_matrix);
+    }
+
+    getPoint(index) {
+        const getIndex = index * 3
+
+        return {
+            x: this.vertices[getIndex],
+            y: this.vertices[getIndex + 1],
+            z: this.vertices[getIndex + 2]
+        }
+
     }
 
     moveModel(distance, axis) {
@@ -241,10 +307,17 @@ class Model {
         this.view_matrix = matrixMultiplication(this.view_matrix, this.camera_z_matrix);
     }
 
+    setTransformNormalMatrix(){
+        let modelViewMatrix = matrixMultiplication(this.view_matrix, this.model_matrix);
+        this.transform_normal_matrix = transposeMatrix(invertMatrix4(modelViewMatrix));
+        console.log(this.transform_normal_matrix);
+    }
+
     moveCameraTo(distance){
         this.camera_translation_matrix[11] = -1*parseFloat(distance);
         this.camera_zoom = distance;
         this.setViewMatrix();
+        this.setTransformNormalMatrix();
     }
 
     rotateCamera(degree, axis){
@@ -273,6 +346,7 @@ class Model {
             this.camera_angle_z = degree;
         }
         this.setViewMatrix();
+        this.setTransformNormalMatrix();
     }
 
     setNormal(){
@@ -323,8 +397,14 @@ class Model {
             n.z /= l;
 
             this.normal.push(n.x, n.y, n.z);
+            this.normal.push(n.x, n.y, n.z);
+            this.normal.push(n.x, n.y, n.z);
 
         }
+    }
+
+    setShadingOn(shadingOn){
+        this.shadingOn = shadingOn;
     }
 }
 

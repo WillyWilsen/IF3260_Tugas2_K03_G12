@@ -406,5 +406,30 @@ class Model {
     setShadingOn(shadingOn){
         this.shadingOn = shadingOn;
     }
+
+    /** Apply model_matrix to vertices */
+    getTransformedVertices() {
+        const finalVertices = [];
+        for (let i = 0; i < this.vertices.length; i += 3) {
+            let quad = [this.vertices[i], this.vertices[i+1], this.vertices[i+2], 1];
+            let result = [0, 0, 0, 0];
+
+            for (let j = 0; j < 4; j++) {
+                for (let k = 0; k < 4; k++) {
+                    result[j] += this.model_matrix[4 * j + k] * quad[k];
+                }
+            }
+
+            if (result[3] != 0) {
+                for (let j = 0; j < 4; j++) {
+                    result[j] /= result[3];
+                }
+            }
+            result.pop();
+            finalVertices.push(...result);
+        }
+
+        return finalVertices;
+    }
 }
 

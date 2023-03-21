@@ -10,6 +10,7 @@ const model_translation_x = document.getElementById('model_translation_x')
 const model_translation_y = document.getElementById('model_translation_y')
 const model_translation_z = document.getElementById('model_translation_z')
 const model_scale = document.getElementById('model_scale')
+const save_btn = document.getElementById('save-btn')
 const load_btn = document.getElementById('load-btn')
 const camera_zoom = document.getElementById('camera_zoom')
 const camera_angle_x = document.getElementById('camera_angle_x')
@@ -41,12 +42,12 @@ function projectionEventListener(e, type) {
 
    if (type == 'orthographic') {
       objects.forEach(model => {
-         model.proj_matrix = getOrthogonalProjection(-4, 4, -4, 4, -2, 10);
+         model.proj_matrix = getOrthogonalProjection(-4, 4, -4, 4, 0.1, 15);
       });
       ortographic_btn.style = 'font-weight: bold;';
    } else if (type == 'perspective') {
       objects.forEach(model => {
-         model.proj_matrix = getPerspectiveProjection(45, canvas.width/canvas.height, -1, 1);
+         model.proj_matrix = getPerspectiveProjection(45, canvas.width/canvas.height, 0.1, 15);
       });
       perspective_btn.style = 'font-weight: bold;';
    } else if (type == 'oblique') {
@@ -110,12 +111,6 @@ model_scale.addEventListener("input", (e) => {
    modelScaleModel(e.target.value);
 })
 
-/**
- * Handle load file event listener
- */
-load_btn.addEventListener("click", (e) => {
-   load()
-})
 
 /**
 * Handle on change selected model
@@ -152,6 +147,45 @@ function resetSelected() {
    camera_angle_x.value = 0
    camera_angle_y.value = 0
    camera_angle_z.value = 0
+}
+
+//////   Save & Load    //////
+/**
+ * Handle load file event listener
+ */
+load_btn.addEventListener("click", e => {
+   load()
+})
+
+save_btn.addEventListener("click", e => {
+   save()
+})
+
+/**
+ * Save model(s)
+ */
+function save() {
+   /** @type {Model[]} */
+   const objectsToSave = objects.map(object => {
+      return {
+         vertices: object.getTransformedVertices(),
+         colors: object.colors,
+         faces: object.faces
+      }  
+   });
+
+   const objectsStr = JSON.stringify(objectsToSave);
+   
+   // Create download element
+   const downloadElement = document.createElement('a');
+   downloadElement.setAttribute('href', 'data:application/json;charset=utf-8,' + encodeURIComponent(objectsStr));
+   downloadElement.setAttribute('download', 'models');
+   downloadElement.style.display = 'none';
+   document.body.appendChild(downloadElement);
+
+   // Click and remove download element
+   downloadElement.click();
+   document.body.removeChild(downloadElement);
 }
 
 /**
@@ -204,24 +238,39 @@ function fileUploaded(e) {
  * @param {Boolean} isLoading 
  */
 function loadObjects(object_string, isLoading){
-    const rawObject = JSON.parse(object_string);
-    const model = new Model([], [], []);
-    Object.assign(model, rawObject);
-    model.init(gl);
-    objects.push(model);
-    if (isLoading){
-      default_objects_string.push(object_string);
-    }
+   const rawObject = JSON.parse(object_string);
 
-    model_selected.innerHTML = `Model Selected: <b>Model ${objects.length}</b>`
-    model_list.innerHTML += `
-    <button onclick="changeSelected(${objects.length - 1})">
-        Model ${objects.length}
-    </button>
-    `
-    selectedIdx = objects.length - 1;
-    resetSelected();
-    projectionEventListener(null, projectionMode);
+   if (Array.isArray(rawObject)) {
+      for (let i = 0; i < rawObject.length; i++) {
+         loadSingleObject(rawObject[i]);
+      }
+   } else {
+      loadSingleObject(rawObject);
+   }
+
+   if (isLoading){
+      default_objects_string.push(object_string);
+   }
+
+   model_selected.innerHTML = `Model Selected: <b>Model ${objects.length}</b>`
+   
+   selectedIdx = objects.length - 1;
+   resetSelected();
+   projectionEventListener(null, projectionMode);
+}
+
+function loadSingleObject(rawObject) {
+   const model = new Model([], [], []);
+   
+   Object.assign(model, rawObject);
+   model.init(gl);
+
+   objects.push(model);
+   model_list.innerHTML += `
+   <button onclick="changeSelected(${objects.length - 1})">
+      Model ${objects.length}
+   </button>
+   `
 }
 
 /**
@@ -229,7 +278,9 @@ function loadObjects(object_string, isLoading){
  * @param {String} distance 
  */
 function cameraZoomHandler(distance){
-    objects[selectedIdx].moveCameraTo(distance);
+   objects.forEach(object => {
+      object.moveCameraTo(distance);
+   })
 }
 camera_zoom.addEventListener("input", (e) => {
     cameraZoomHandler(e.target.value);
@@ -241,7 +292,9 @@ camera_zoom.addEventListener("input", (e) => {
  * @param {String} axis 
  */
 function cameraRotationHandler(degree, axis){
-    objects[selectedIdx].rotateCamera(parseFloat(degree), axis);
+   objects.forEach(object => {
+      object.rotateCamera(parseFloat(degree), axis);
+   })
 }
 camera_angle_x.addEventListener("input", (e) => {
     cameraRotationHandler(e.target.value, "x");

@@ -66,12 +66,6 @@ class Model {
             0, 0, 1, 0,
             0, 0, 0, 1,
         ]
-        this.model_center_matrix = [
-            1, 0, 0, 0,
-            0, 1, 0, 0,
-            0, 0, 1, 0,
-            0, 0, 0, 1,
-        ]
         this.model_x_matrix = [
             1, 0, 0, 0,
             0, 1, 0, 0,
@@ -235,7 +229,6 @@ class Model {
         this.model_matrix = matrixMultiplication(this.model_translation_matrix, this.model_x_matrix);
         this.model_matrix = matrixMultiplication(this.model_matrix, this.model_y_matrix);
         this.model_matrix = matrixMultiplication(this.model_matrix, this.model_z_matrix);
-        this.model_matrix = matrixMultiplication(this.model_matrix, this.model_center_matrix);
     }
 
     getPoint(index) {

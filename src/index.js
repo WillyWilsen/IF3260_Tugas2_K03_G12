@@ -319,9 +319,13 @@ reset.addEventListener("click", (e) => {
 
 shadingCheckbox.addEventListener('change', function() {
     if(this.checked) {
-        objects[selectedIdx].setShadingOn(true);
+        objects.forEach(object => {
+            object.setShadingOn(true);
+        });
     } else {
-        objects[selectedIdx].setShadingOn(false);
+        objects.forEach(object => {
+            object.setShadingOn(false);
+        });
     }
   });
 

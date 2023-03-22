@@ -9,7 +9,9 @@ const model_angle_z = document.getElementById('model_angle_z')
 const model_translation_x = document.getElementById('model_translation_x')
 const model_translation_y = document.getElementById('model_translation_y')
 const model_translation_z = document.getElementById('model_translation_z')
-const model_scale = document.getElementById('model_scale')
+const model_scale_x = document.getElementById('model_scale_x')
+const model_scale_y = document.getElementById('model_scale_y')
+const model_scale_z = document.getElementById('model_scale_z')
 const save_btn = document.getElementById('save-btn')
 const load_btn = document.getElementById('load-btn')
 const camera_zoom = document.getElementById('camera_zoom')
@@ -104,11 +106,17 @@ model_translation_z.addEventListener("input", (e) => {
  * @param {String} k 
  * @param {String} axis 
  */
-function modelScaleModel(k){
-   objects[selectedIdx].scaleModel(k);
+function modelScaleModel(k, axis){
+   objects[selectedIdx].scaleModel(k, axis);
 }
-model_scale.addEventListener("input", (e) => {
-   modelScaleModel(e.target.value);
+model_scale_x.addEventListener("input", (e) => {
+   modelScaleModel(e.target.value, "x");
+})
+model_scale_y.addEventListener("input", (e) => {
+   modelScaleModel(e.target.value, "y");
+})
+model_scale_z.addEventListener("input", (e) => {
+   modelScaleModel(e.target.value, "z");
 })
 
 
@@ -125,7 +133,9 @@ function changeSelected(idx) {
    model_translation_x.value = objects[selectedIdx].model_translation_x
    model_translation_y.value = objects[selectedIdx].model_translation_y
    model_translation_z.value = objects[selectedIdx].model_translation_z
-   model_scale.value = objects[selectedIdx].model_scale
+   model_scale_x.value = objects[selectedIdx].model_scale_x
+   model_scale_y.value = objects[selectedIdx].model_scale_y
+   model_scale_z.value = objects[selectedIdx].model_scale_z
    camera_zoom.value = objects[selectedIdx].camera_zoom
    camera_angle_x.value = objects[selectedIdx].camera_angle_x
    camera_angle_y.value = objects[selectedIdx].camera_angle_y
@@ -142,7 +152,9 @@ function resetSelected() {
    model_translation_x.value = 0
    model_translation_y.value = 0
    model_translation_z.value = 0
-   model_scale.value = 1
+   model_scale_x.value = 1
+   model_scale_y.value = 1
+   model_scale_z.value = 1
    camera_zoom.value = 5
    camera_angle_x.value = 0
    camera_angle_y.value = 0

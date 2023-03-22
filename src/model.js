@@ -92,7 +92,9 @@ class Model {
         this.model_translation_x = 0
         this.model_translation_y = 0
         this.model_translation_z = 0
-        this.model_scale = 1
+        this.model_scale_x = 1
+        this.model_scale_y = 1
+        this.model_scale_z = 1
 
         this.camera_translation_matrix = [
             1, 0, 0, 0,
@@ -286,11 +288,19 @@ class Model {
         this.setModelMatrix();
     }
 
-    scaleModel(k) {
-        this.model_translation_matrix[0] = k;
-        this.model_translation_matrix[5] = k;
-        this.model_translation_matrix[10] = k;
-        this.model_scale = k;
+    scaleModel(k, axis) {
+        if (axis === "x"){
+            this.model_translation_matrix[0] = k;
+            this.model_scale_x = k;
+        }
+        if (axis === "y"){
+            this.model_translation_matrix[5] = k;
+            this.model_scale_y = k;
+        }
+        if (axis === "z"){
+            this.model_translation_matrix[10] = k;
+            this.model_scale_z = k;
+        }
         this.setModelMatrix();
     }
 

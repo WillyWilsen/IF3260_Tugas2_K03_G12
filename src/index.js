@@ -277,12 +277,42 @@ function loadSingleObject(rawObject) {
    Object.assign(model, rawObject);
    model.init(gl);
 
+   centerModel(model);
+
    objects.push(model);
    model_list.innerHTML += `
    <button onclick="changeSelected(${objects.length - 1})">
       Model ${objects.length}
    </button>
    `
+}
+
+/**
+ * Center model's vertices so that they are centered to origin, then translate so it looks like original model. Why? To make sure rotation is centered to object
+ */
+function centerModel(model) {
+   let vertAvg = [0, 0, 0];
+   let vertCount = model.vertices.length/3;
+
+   for (let i = 0; i < model.vertices.length; i += 3) {
+      vertAvg[0] += model.vertices[i];
+      vertAvg[1] += model.vertices[i + 1];
+      vertAvg[2] += model.vertices[i + 2];
+   }
+
+   vertAvg[0] /= vertCount;
+   vertAvg[1] /= vertCount;
+   vertAvg[2] /= vertCount;
+
+   for (let i = 0; i < model.vertices.length; i += 3) {
+      model.vertices[i] -= vertAvg[0];
+      model.vertices[i + 1] -= vertAvg[1];
+      model.vertices[i + 2] -= vertAvg[2];
+   }
+
+   model.moveModel(vertAvg[0], 'x');
+   model.moveModel(vertAvg[1], 'y');
+   model.moveModel(vertAvg[2], 'z');
 }
 
 /**

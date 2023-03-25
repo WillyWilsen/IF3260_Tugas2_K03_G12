@@ -56,7 +56,7 @@ Selain itu, untuk menambah jenis objek yang akan digambar, pengguna dapat melaku
 2. Jalankan `index.html`
 
 ### Models Sample
-<img src="assets/model.png" width=300 />
+<img src="assets/overview.png" width=300 />
 
 ### Checklist dan Pembagian Tugas
 <table>

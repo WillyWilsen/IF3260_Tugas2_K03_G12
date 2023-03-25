@@ -279,6 +279,17 @@ function loadSingleObject(rawObject) {
 
    centerModel(model);
 
+   if (shadingCheckbox.checked){
+    model.setShadingOn(true);
+   } else {
+    model.setShadingOn(false);
+   }
+
+   model.moveCameraTo(camera_zoom.value);
+   model.rotateCamera(parseFloat(camera_angle_x.value), "x");
+   model.rotateCamera(parseFloat(camera_angle_y.value), "y");
+   model.rotateCamera(parseFloat(camera_angle_z.value), "z");
+
    objects.push(model);
    model_list.innerHTML += `
    <button onclick="changeSelected(${objects.length - 1})">
@@ -357,6 +368,7 @@ reset.addEventListener("click", (e) => {
     default_objects_string.forEach(default_object_string => {
         loadObjects(default_object_string, false);
     });
+    shadingCheckbox.checked = false;
 })
 
 shadingCheckbox.addEventListener('change', function() {

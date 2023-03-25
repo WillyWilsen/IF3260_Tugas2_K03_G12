@@ -182,9 +182,6 @@ class Model {
         if (this.isNormalEmpty){
             this.setNormal();
             this.isNormalEmpty = false;
-            if (this.normal.length == this.faces.length * 3){
-                console.log(this.normal);
-            }
         }
 
         const vertexBuffer = gl.createBuffer()
@@ -311,9 +308,8 @@ class Model {
     }
 
     setTransformNormalMatrix(){
-        let modelViewMatrix = matrixMultiplication(this.view_matrix, this.model_matrix);
+        let modelViewMatrix = matrixMultiplication(this.model_matrix, this.view_matrix);
         this.transform_normal_matrix = transposeMatrix(invertMatrix4(modelViewMatrix));
-        console.log(this.transform_normal_matrix);
     }
 
     moveCameraTo(distance){

@@ -91,7 +91,7 @@ Selain itu, untuk menambah jenis objek yang akan digambar, pengguna dapat melaku
         <td align="center">13520160 - Willy Wilsen</td>
     </tr>
     <tr>
-        <td align="center">Mengubah jarak (radius) kamera view</td>
+        <td align="center">Mengubah jarak (radius) kamera view dan memutar kamera</td>
         <td align="center"><strong>✓</strong></td>
         <td align="center">13520112 - Fernaldy</td>
     </tr>

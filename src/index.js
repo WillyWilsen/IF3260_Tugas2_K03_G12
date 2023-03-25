@@ -155,10 +155,10 @@ function resetSelected() {
    model_scale_x.value = 1
    model_scale_y.value = 1
    model_scale_z.value = 1
-   camera_zoom.value = 5
-   camera_angle_x.value = 0
-   camera_angle_y.value = 0
-   camera_angle_z.value = 0
+//    camera_zoom.value = 5
+//    camera_angle_x.value = 0
+//    camera_angle_y.value = 0
+//    camera_angle_z.value = 0
 }
 
 //////   Save & Load    //////

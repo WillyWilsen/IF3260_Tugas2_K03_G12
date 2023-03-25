@@ -145,7 +145,7 @@ function changeSelected(idx) {
 /**
  * Handle on reset selected model
  */
-function resetSelected() {
+function resetSelected(isResetting) {
    model_angle_x.value = 0
    model_angle_y.value = 0
    model_angle_z.value = 0
@@ -155,10 +155,12 @@ function resetSelected() {
    model_scale_x.value = 1
    model_scale_y.value = 1
    model_scale_z.value = 1
-//    camera_zoom.value = 5
-//    camera_angle_x.value = 0
-//    camera_angle_y.value = 0
-//    camera_angle_z.value = 0
+   if (isResetting){
+       camera_zoom.value = 5
+       camera_angle_x.value = 0
+       camera_angle_y.value = 0
+       camera_angle_z.value = 0
+   }
 }
 
 //////   Save & Load    //////
@@ -237,7 +239,7 @@ function fileUploaded(e) {
 
    // Setting file reader on load
    reader.onload = (e) => {
-        loadObjects(e.target.result, true);
+        loadObjects(e.target.result, true, false);
    }
    
    // Begin reading
@@ -249,7 +251,7 @@ function fileUploaded(e) {
  * @param {String} object_string 
  * @param {Boolean} isLoading 
  */
-function loadObjects(object_string, isLoading){
+function loadObjects(object_string, isLoading, isResetting){
    const rawObject = JSON.parse(object_string);
 
    if (Array.isArray(rawObject)) {
@@ -267,7 +269,7 @@ function loadObjects(object_string, isLoading){
    model_selected.innerHTML = `Model Selected: <b>Model ${objects.length}</b>`
    
    selectedIdx = objects.length - 1;
-   resetSelected();
+   resetSelected(isResetting);
    projectionEventListener(null, projectionMode);
 }
 
@@ -366,9 +368,14 @@ reset.addEventListener("click", (e) => {
     objects = [];
     model_list.innerHTML = ``;
     default_objects_string.forEach(default_object_string => {
-        loadObjects(default_object_string, false);
+        loadObjects(default_object_string, false, true);
     });
     shadingCheckbox.checked = false;
+    objects.forEach(object => {
+        object.resetMMatrix();
+        object.resetVMatrix();
+    });
+
 })
 
 shadingCheckbox.addEventListener('change', function() {

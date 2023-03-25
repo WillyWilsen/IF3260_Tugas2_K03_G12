@@ -45,9 +45,9 @@
     >
 
 <p align="justify">
-Pengguna dapat berkreasi melalui interaksi dengan kanvas menggunakan berbagai tools yang tersedia pada bagian sebelah kanan dari kanvas. Untuk menentukan jenis objek yang akan dimodifikasi, pengguna dapat memilih sendiri melalui model tool yang telah disediakan. Terdapat pula berbagai fungsi tambahan yang dapat membantu pengguna dalam melakukan perubahan pada gambar yang telah dicetak pada kanvas, yang dimana fungsi-fungsi tambahan ini terdapat pada pada dokumentasi/laporan pada folder doc.
+Pengguna dapat berkreasi melalui interaksi dengan kanvas menggunakan berbagai tools yang tersedia pada bagian sebelah kanan dari kanvas. Untuk menentukan jenis objek yang akan dimodifikasi, pengguna dapat memilih sendiri melalui model tool yang telah disediakan. Terdapat pula berbagai fungsionalitas yang dapat membantu pengguna dalam melakukan perubahan pada gambar yang telah dicetak pada kanvas, yang mana fungsionalitas-fungsionalitas ini terdapat pada pada dokumentasi/laporan pada folder doc.
 
-Selain itu, untuk menambah jenis objek yang akan digambar, pengguna dapat melakukan import objek yang ingin di gambar melalui button load. Objek yang diimport adalah file berformat .json dan memiliki atribut vertices, colors, dan faces di dalamnya. Setelah objek yang diimport dimodifikasi, pengguna dapat melakukan save melalui button save agar objek-objek tersebut dapat digunakan kembali. Sementara itu, terdapat juga button reset yang ketika diklik, seluruh objek yang telah dimodifikasi akan kembali ke dalam keadaan default yakni keadaan objek saat pertama kali di load.
+Selain itu, untuk menambah jenis objek yang akan digambar, pengguna dapat melakukan <i>import</i> objek yang ingin di gambar melalui button <i>load</i>. Objek yang di-<i>import</i> adalah <i>file</i> berformat <i>.json</i> dan memiliki atribut <i>vertices</i>, <i>colors</i>, dan <i>faces</i> di dalamnya. Setelah objek yang di-<i>import</i> dimodifikasi, pengguna dapat melakukan <i>save</i> melalui button <i>save</i> agar objek-objek tersebut dapat di-<i>load</i> kembali dalam kondisi setelah modifikasi. Sementara itu, terdapat juga button <i>reset</i> yang ketika diklik, seluruh objek yang telah dimodifikasi akan kembali ke dalam keadaan <i>default</i> yakni keadaan objek saat pertama kali di-<i>load</i>.
 
 </p>
 
@@ -56,7 +56,7 @@ Selain itu, untuk menambah jenis objek yang akan digambar, pengguna dapat melaku
 2. Jalankan `index.html`
 
 ### Models Sample
-<img src="assets/overview.png" width=300 />
+<img src="assets/model.png" width=300 />
 
 ### Checklist dan Pembagian Tugas
 <table>

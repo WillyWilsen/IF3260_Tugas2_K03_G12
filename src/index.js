@@ -375,6 +375,7 @@ reset.addEventListener("click", (e) => {
         object.resetMMatrix();
         object.resetVMatrix();
     });
+    projectionEventListener(null, 'perspective');
 
 })
 

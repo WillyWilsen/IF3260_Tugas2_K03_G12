@@ -54,7 +54,7 @@ function projectionEventListener(e, type) {
       perspective_btn.style = 'font-weight: bold;';
    } else if (type == 'oblique') {
       objects.forEach(model => {
-         model.proj_matrix = getObliqueProjection(-45, -45, 2, 10, 2, 10, -2, 10);
+         model.proj_matrix = getObliqueProjection(45, 45, -6, 2, -6, 2, -2, 10);
       });
       oblique_btn.style = 'font-weight: bold;';
    }

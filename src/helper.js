@@ -45,7 +45,7 @@ function getObliqueProjection(theta, psi, xmin, xmax, ymin, ymax, near, far) {
     ];
     let orth = getOrthogonalProjection(left, right, bottom, top, near, far);
 
-    return matrixMultiplication(orth, H);
+    return matrixMultiplication(H, orth);
 }
 
 function matrixMultiplication(A, B) {
